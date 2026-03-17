@@ -1,0 +1,29 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: consumer
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    consumer:
+      group-id: group1
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      max-poll-records: 10 # Maximum no of records per poll
+      properties:
+        fetch.min.bytes: 1 # Min data before sending
+        fetch.max.wait.ms: 500 # Max wait before sending
+        max.poll.interval.ms: 300000 # Max time between two poll() calls (5 min), else rebalance triggered,then partitions reassigned
+        spring:
+          json:
+            trusted:
+              packages: com.rohit.kafka.Entity
+            value:
+              default:
+                type: com.rohit.kafka.Entity.Course
+
+    listener:
+      poll-timeout: 60000 #polling time:- 1min
